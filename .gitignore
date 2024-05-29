@@ -1,0 +1,7 @@
+## user customized
+.env
+.vscode
+.vscode/.
+makefile
+bin
+bin/.
