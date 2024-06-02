@@ -158,7 +158,9 @@ class LinkedList {
 		Node<T>* itrObj = this->pHead;
 		while (true) {
 			if (count == index - 1) {
-				itrObj = (itrObj->pNextNode)->pNextNode;
+				Node<T>* nodeToDelete = itrObj->pNextNode; 
+				itrObj->pNextNode = (itrObj->pNextNode)->pNextNode;
+				delete nodeToDelete;
 				break;
 			}
 
