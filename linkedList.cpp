@@ -42,6 +42,7 @@ class LinkedList {
 		std::cout << "Linked List Destructor Called" << std::endl;
 		Node<T>* nextToDelete = this->pHead;
 		while(true) {
+			std::cout << "deleting pointer to: " << nextToDelete->data << std::endl;
 			if (nextToDelete->pNextNode != nullptr) {
 				Node<T>* temp = nextToDelete->pNextNode;
 				delete nextToDelete;
@@ -65,7 +66,7 @@ class LinkedList {
 
 		while(true) {
 			if (itrObj->pNextNode != nullptr) {
-				std::cout << itrObj->data << " --> " << std::endl;
+				std::cout << itrObj->data << " --> ";
 				itrObj = itrObj->pNextNode;
 			} else {
 				std:: cout << itrObj->data << std::endl;
@@ -82,7 +83,6 @@ class LinkedList {
 		while (itrObj->pNextNode != nullptr) {
 			count++;
 			itrObj = itrObj->pNextNode;
-			break;
 		}
 
 		return count;
@@ -90,7 +90,7 @@ class LinkedList {
 
 	// insert at beginning
 	void insertAtBeginning(T data){
-		Node<T> node = new Node<T>(data, this->pHead);
+		Node<T>* node = new Node<T>(data, this->pHead);
 		this->pHead = node;
 	}
 
@@ -116,14 +116,14 @@ class LinkedList {
 	}
 
 	// insert at
-	void inserAt(int index, T data) {
+	void insertAt(int index, T data) {
 		if (index < 0 || index > this->getLength()) {
 			std::cout << "error: invalid index" << std::endl;
 			return;
 		} 
 
 		if (index == 0) {
-			this->insertAtBeginning();
+			this->insertAtBeginning(data);
 			return;
 		}
 
@@ -131,12 +131,12 @@ class LinkedList {
 		Node<T>* itrObj = this->pHead;
 		while(true) {
 			if (count == index - 1) {
-				Node<T>* n = new Node<T>(data, &itrObj->pNextNode);
+				Node<T>* n = new Node<T>(data, itrObj->pNextNode);
 				itrObj->pNextNode = n;
 				break;
 			}
 
-			itrObj = itrObj->nextNode;
+			itrObj = itrObj->pNextNode;
 			count++;
 		}
 	};
@@ -149,20 +149,20 @@ class LinkedList {
 		}
 
 		if (index == 0) {
-			delete this->head;
-			this->head = (this->head)->nextNode;
+			delete this->pHead;
+			this->pHead = (this->pHead)->pNextNode;
 			return;
 		}
 
 		int count = 0;
-		Node<T>* itrObj = this->head;
+		Node<T>* itrObj = this->pHead;
 		while (true) {
 			if (count == index - 1) {
-				itrObj = (itrObj->nextNode)->nextNode;
+				itrObj = (itrObj->pNextNode)->pNextNode;
 				break;
 			}
 
-			itrObj = itrObj->nextNode;
+			itrObj = itrObj->pNextNode;
 			count++;
 		}
 	}
@@ -179,11 +179,37 @@ class LinkedList {
 // main function
 int main() {
 	
-	std::cout << "Hello World" << std::endl;
+	// adding vector to linked list
+	std::cout << std::endl;
+	std::cout << "Adding a vector of strings to linked list" << std::endl;
 
 	LinkedList<std::string> ll = LinkedList<std::string>();
 	std::vector<std::string> myValues{ "banana", "mango", "grapes", "orange" };
 	ll.insertValues(myValues);
+	ll.print();
+
+	// insert apple at beginning
+	std::cout << std::endl;
+	std::cout << "Insert apple at the beginning of the linked list" << std::endl;
+	ll.insertAtBeginning("apple");
+	ll.print();
+
+	// insert coconut at [2]
+	std::cout << std::endl;
+	std::cout << "Insert coconut at index 2" << std::endl;
+	ll.insertAt(2, "coconut");
+	ll.print();
+
+	// insert peaches at end
+	std::cout << std::endl;
+	std::cout << "Insert peaches at the end of the linked list" << std::endl;
+	ll.insertAtEnd("peaches");
+	ll.print();
+
+	// remove value at [3]
+	std::cout << std::endl;
+	std::cout << "Remove value at index 3" << std::endl;
+	ll.removeAt(3);
 	ll.print();
 
 	return 0;
