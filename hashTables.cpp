@@ -8,7 +8,7 @@
 template <typename T>
 class HashTable{
     private:
-    // get hash
+        // get hash
         int getHash(std::string key) {
             int hash = 0;
             for (char c: key) {
@@ -26,7 +26,7 @@ class HashTable{
         // constructor(s)
         explicit HashTable<T>():
             tSize{100},
-            hTable(100, 0)
+            hTable(100, T{})
         {}
 
         explicit HashTable<T>(int size):
@@ -59,11 +59,11 @@ int main() {
 
     // set value
     std::cout << "Set Values" << std::endl;
-    myHashTableVar.setValue("march 6", 310.0);
-    myHashTableVar.setValue("march 7", 340.0);
-    myHashTableVar.setValue("march 8", 380.0);
-    myHashTableVar.setValue("march 9", 297.0);
-    myHashTableVar.setValue("march 10", 323.0);
+    myHashTableVar.setValue("march 6", 310);
+    myHashTableVar.setValue("march 7", 340);
+    myHashTableVar.setValue("march 8", 380);
+    myHashTableVar.setValue("march 9", 297);
+    myHashTableVar.setValue("march 10", 323);
 
     // display values
     std::cout << std::endl << "Display Values" << std::endl;
