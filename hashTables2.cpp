@@ -4,11 +4,29 @@
 #include <tuple>
 
 template<typename T>
+struct hashObject{
+    int index;
+    T value;
+    bool isNone;
+    hashObject<T>():
+        index{},
+        value{},
+        isNone{}
+    {}
+
+    hashObject<T>(int idx, T val, bool none):
+        index{idx},
+        value{val},
+        isNone{none}
+    {}
+};
+
+template<typename T>
 class hashTable{
     private: 
         // member(s)
         int tableSize;
-        std::vector<std::vector<std::tuple<int, T, bool>>> myVectors;
+        std::vector<std::vector<hashObject<T>>> myVectors;
         // function(s)
         int getHash(std::string key);
 
@@ -16,12 +34,12 @@ class hashTable{
         // constructor(s)
         explicit hashTable<T>():
             tableSize{10},
-            myVectors(10, std::vector(1, std::make_tuple(0, T{}, false)))
+            myVectors(10, std::vector(1, hashObject<T>{}))
         {}
 
         explicit hashTable<T>(int size):
             tableSize{size},
-            myVectors(size, std::vector(1, std::make_tuple(0, T{}, false)))
+            myVectors(size, std::vector(1, hashObject<T>{}))
         {}
 
         // funcstion(s)
@@ -31,7 +49,7 @@ class hashTable{
 };
 
 // hashTable function(s) implementations
-template<typename T>
+template<typename T> __attribute__((always_inline)) inline
 int hashTable<T>::getHash(std::string key) {
     int h = 0;
     for(char c : key) {
@@ -58,18 +76,18 @@ template<typename T>
 void hashTable<T>::setItem(std::string key, T value) {
     using ht = hashTable<T>;
     int h = ht::getHash(key);
-    bool isFound = false;
+    // bool isFound = false;
 
-    for (int idx = 1; idx <= ht::myVectors[h].size(); idx++) {
-        if (((ht::myVectors[h][idx]).size() == 2) && (std::get<0>(ht::myVectors[h][idx]) == key)) {
-            ht::myVectors[h][idx] = std::make_tuple(idx, value);
-            isFound = true;
-        }
-    }
+    // for (int idx = 1; idx <= ht::myVectors[h].size(); idx++) {
+    //     if (((ht::myVectors[h][idx]).size() == 2) && (std::get<0>(ht::myVectors[h][idx]) == key)) {
+    //         ht::myVectors[h][idx] = std::make_tuple(idx, value);
+    //         isFound = true;
+    //     }
+    // }
 
-    if (!isFound) {
-        (ht::myVectors[h]).push_back(std::make_tuple(ht::myVectors[h].size(), value));
-    }
+    // if (!isFound) {
+    //     (ht::myVectors[h]).push_back(std::make_tuple(ht::myVectors[h].size(), value));
+    // }
 }
 
 // template<typename T>
