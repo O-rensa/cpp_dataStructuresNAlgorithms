@@ -3,24 +3,27 @@
 #include <string>
 #include <tuple>
 
+// struct(s)
 template<typename T>
 struct hashObject{
-    int index;
+    std::string key;
     T value;
     bool isNone;
-    hashObject<T>():
-        index{},
-        value{},
-        isNone{}
+
+    explicit hashObject<T>():
+        key{},
+        value{T{}},
+        isNone{true}
     {}
 
-    hashObject<T>(int idx, T val, bool none):
-        index{idx},
+    explicit hashObject<T>(std::string key, T val, bool none):
+        key{key},
         value{val},
         isNone{none}
     {}
 };
 
+// class(es)
 template<typename T>
 class hashTable{
     private: 
@@ -34,12 +37,12 @@ class hashTable{
         // constructor(s)
         explicit hashTable<T>():
             tableSize{10},
-            myVectors(10, std::vector(1, hashObject<T>{}))
+            myVectors(10, std::vector(1, hashObject<T>()))
         {}
 
         explicit hashTable<T>(int size):
             tableSize{size},
-            myVectors(size, std::vector(1, hashObject<T>{}))
+            myVectors(size, std::vector(1, hashObject<T>()))
         {}
 
         // funcstion(s)
@@ -48,7 +51,8 @@ class hashTable{
         void deleteItem(std::string key);
 };
 
-// hashTable function(s) implementations
+// class function(s) definitions
+// // hashTable
 template<typename T> __attribute__((always_inline)) inline
 int hashTable<T>::getHash(std::string key) {
     int h = 0;
@@ -58,58 +62,79 @@ int hashTable<T>::getHash(std::string key) {
     return h % hashTable<T>::tableSize;
 }
 
-// template<typename T>
-// T hashTable<T>::getItem(std::string key) {
-//     using ht = hashTable<T>;
-//     int arrIndex = ht::getHash(key);
+template<typename T>
+T hashTable<T>::getItem(std::string key) {
+    using ht = hashTable<T>;
+    int idx = ht::getHash(key);
     
-//     for(std::vector val : ht::myVectors[arrIndex]){
-//         if (std::get<0>(val) == key) {
-//             return std::get<1>(val);
-//         }
-//     }
-
-//     return T{};
-// }
+    for(hashObject<T> obj : ht::myVectors[idx]){
+        if (obj.key == key) {
+            return obj.value;
+        }
+    }
+    
+    return T{};
+}
 
 template<typename T>
 void hashTable<T>::setItem(std::string key, T value) {
     using ht = hashTable<T>;
-    int h = ht::getHash(key);
-    // bool isFound = false;
+    int idx = ht::getHash(key);
+    bool isFound = false;
 
-    // for (int idx = 1; idx <= ht::myVectors[h].size(); idx++) {
-    //     if (((ht::myVectors[h][idx]).size() == 2) && (std::get<0>(ht::myVectors[h][idx]) == key)) {
-    //         ht::myVectors[h][idx] = std::make_tuple(idx, value);
-    //         isFound = true;
-    //     }
-    // }
+    for (hashObject<T> obj : ht::myVectors[idx]) {
+        if ((!obj.isNone) && (obj.key == key)) {
+            obj.value = value;
+            isFound = true;
+        }
+    }
 
-    // if (!isFound) {
-    //     (ht::myVectors[h]).push_back(std::make_tuple(ht::myVectors[h].size(), value));
-    // }
+    if (!isFound) {
+        (ht::myVectors[idx]).push_back(hashObject<T>(key, value, false));
+    }
+
+    std::cout << std::endl << "{ key: " << key << ",value: " << value << "} is set on index " << idx << std::endl;
 }
 
-// template<typename T>
-// void hashTable<T>::deleteItem(std:: string key) {
-//     using ht = hashTable<T>;
-//     int h = ht::getHash(key);
-//     for (int idx = 1; ht::myVectors[h].size(); idx++) {
-//         if (std::get<0>(ht::myVectors[h][idx]) == key) {
-//             std::cout << "Deleting index " << idx << std::endl; 
-//             ht::myVectors[h][idx] = std::make_tuple(idx, T{});
-//         }
-//     }
-// }
+template<typename T>
+void hashTable<T>::deleteItem(std:: string key) {
+    using ht = hashTable<T>;
+    int idx = ht::getHash(key);
+    auto iter = ht::myVectors[idx].begin();
+    for (hashObject obj: ht::myVectors[idx]) {
+        if (obj.key == key) {
+            break;
+        }
+        iter++;
+    }
+
+    if (iter != ht::myVectors[idx].end()) {
+        std::cout << "Deleting object with key " << key << std::endl;
+        (ht::myVectors[idx]).erase(iter);
+        std::cout << "Successfully deleted object with key " << key << std::endl; 
+    }
+    
+}
 
 int main() {
     hashTable<int> myTab{};
 
-    std::cout << "setting values to the table" << std::endl;
+    std::cout << std::endl << "setting values to the table" << std::endl;
     myTab.setItem("march 6", 310);
-    // myTab.setItem("march 7", 310);
-    // myTab.setItem("march 8", 310);
-    // myTab.setItem("march 11", 310);
+    myTab.setItem("march 7", 420);
+    myTab.setItem("march 8", 67);
+    myTab.setItem("march 11", 250);
+    myTab.setItem("march 17", 365);
 
+    std::cout << "as per observation, both march 6 and march 17 are on the same index" << std::endl;
+    std::cout << "but both are still available and none of them is deleted" << std::endl;
+
+    std::cout << "showing value for march 6: { key: march 6, value: " << myTab.getItem("march 6") << "}" << std::endl; 
+    std::cout << "showing value for march 17: { key: march 17, value: " << myTab.getItem("march 17") << "}" << std::endl; 
+    
+    std::cout << std::endl << "deleting march 8 value" << std::endl;
+    myTab.deleteItem("march 8");
+    std::cout << "showing value for march 8: { key: march 8, value: " << myTab.getItem("march 8") << "}" << std::endl; 
+    
     return 0;
 }
