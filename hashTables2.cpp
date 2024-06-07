@@ -112,8 +112,10 @@ void hashTable<T>::deleteItem(std:: string key) {
         std::cout << "Deleting object with key " << key << std::endl;
         (ht::myVectors[idx]).erase(iter);
         std::cout << "Successfully deleted object with key " << key << std::endl; 
+        return;
     }
     
+    std::cout << "key " << key << " not found." << std::endl;
 }
 
 int main() {
@@ -126,7 +128,7 @@ int main() {
     myTab.setItem("march 11", 250);
     myTab.setItem("march 17", 365);
 
-    std::cout << "as per observation, both march 6 and march 17 are on the same index" << std::endl;
+    std::cout << std::endl << "as per observation, both march 6 and march 17 are on the same index" << std::endl;
     std::cout << "but both are still available and none of them is deleted" << std::endl;
 
     std::cout << "showing value for march 6: { key: march 6, value: " << myTab.getItem("march 6") << "}" << std::endl; 
@@ -135,6 +137,13 @@ int main() {
     std::cout << std::endl << "deleting march 8 value" << std::endl;
     myTab.deleteItem("march 8");
     std::cout << "showing value for march 8: { key: march 8, value: " << myTab.getItem("march 8") << "}" << std::endl; 
+    
+    std::cout << std::endl << std::endl << "deleting march 17 value" << std::endl;
+    myTab.deleteItem("march 17");
+    std::cout << "showing value for march 8: { key: march 17, value: " << myTab.getItem("march 17") << "}" << std::endl; 
+
+    std::cout << std::endl << std::endl << "deleting march 17 again should throw an error" << std::endl;
+    myTab.deleteItem("march 17");
     
     return 0;
 }
