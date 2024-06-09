@@ -33,12 +33,12 @@ class LinkedList {
 		Node<T>* pHead;
 		
 		// constructor
-		explicit LinkedList():
+		explicit LinkedList<T>():
 			pHead{ new Node<T>{} }
 		{};
 
 		// destructor
-		~LinkedList() {
+		~LinkedList<T>() {
 			std::cout << "Linked List Destructor Called" << std::endl;
 			Node<T>* nextToDelete = this->pHead;
 			while(true) {

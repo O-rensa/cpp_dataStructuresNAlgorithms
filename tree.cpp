@@ -9,13 +9,13 @@ class TreeNode {
         TreeNode*  parent;
     public:
         // constructor(s);
-        TreeNode():
+        explicit TreeNode():
             data{},
             children(),
             parent{nullptr}
         {}
 
-        TreeNode(std::string data):
+        explicit TreeNode(std::string data):
             data{data},
             children{},
             parent{nullptr}
@@ -23,12 +23,11 @@ class TreeNode {
 
         // destructor
         ~TreeNode() {
-            std::cout << "initializing TreeNode destructor for " << this->data << std::endl;
+            std::cout << std::endl << "initializing TreeNode destructor for " << this->data << std::endl;
 
-            // std::cout << "deleting pointers for children" << std::endl;
             for (TreeNode* c : children) {
                 if (c != nullptr) {
-                    // std::cout << "deleting child: " << c->data << std::endl;
+                    std::cout << "deleting child: " << c->data << std::endl;
                     delete c;
                     c = nullptr;
                 }
