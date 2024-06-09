@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-class stockPriceObj {
+class StockPriceObj {
     private:
         std::string company;
         std::string timeStamp;
@@ -10,14 +10,14 @@ class stockPriceObj {
         bool isBlank;
     public:
         // constructor(s)
-        stockPriceObj():
+        StockPriceObj():
             company{},
             timeStamp{},
             price{},
             isBlank{true}
         {}
 
-        stockPriceObj(std::string name, std::string time, float _price):
+        StockPriceObj(std::string name, std::string time, float _price):
             company{name},
             timeStamp{time},
             price{_price},
@@ -29,12 +29,12 @@ class stockPriceObj {
 };
 
 template<typename T> 
-class myQueue {
+class MyQueue {
     private:
         std::vector<T> collection;
     public:
         // constructor(s)
-        explicit myQueue<T>() = default;
+        explicit MyQueue<T>() = default;
 
         // method(s)
         void enqueue(T value);
@@ -45,38 +45,36 @@ class myQueue {
 // class method(s) definition
 // // myQueue
 template<typename T>
-void myQueue<T>::enqueue(T value) {
-    using mq = myQueue<T>;
+void MyQueue<T>::enqueue(T value) {
 
-    mq::collection.push_back(value);
+    this->collection.push_back(value);
     std::cout << "successfully added to queue" << std::endl;
 }
 
 template<typename T>
-T myQueue<T>::dequeue() {
-    using mq = myQueue<T>;
+T MyQueue<T>::dequeue() {
 
-    if (mq::collection.size() == 0) {
+    if (this->collection.size() == 0) {
         std::cout << "the queue is empty" << std::endl;
         return T{};
     }
 
-    T output = mq::collection.front();
-    mq::collection.erase(mq::collection.begin());
+    T output = this->collection.front();
+    this->collection.erase(this->collection.begin());
 
     return output;
 }
 
 template<typename T>
-int myQueue<T>::size() {
-    int o =  myQueue<T>::collection.size();
+int MyQueue<T>::size() {
+    int o =  this->collection.size();
 
     return o;
 }
 
 // // stockPriceObj
-void stockPriceObj::print() {
-    using s = stockPriceObj;
+void StockPriceObj::print() {
+    using s = StockPriceObj;
 
     if (s::isBlank){
         return;
@@ -86,12 +84,12 @@ void stockPriceObj::print() {
 }
 
 int main() {
-    myQueue<stockPriceObj> myVar = myQueue<stockPriceObj>();
+    MyQueue<StockPriceObj> myVar = MyQueue<StockPriceObj>();
 
     std::cout << "inserting data into the queue" << std::endl;
-    myVar.enqueue(stockPriceObj("Wall mart", "15 apr, 11.01 AM", 131.10));
-    myVar.enqueue(stockPriceObj("Wall mart", "15 apr, 11.02 AM", 132.00));
-    myVar.enqueue(stockPriceObj("Wall mart", "15 apr, 11.03 AM", 135.00));
+    myVar.enqueue(StockPriceObj("Wall mart", "15 apr, 11.01 AM", 131.10));
+    myVar.enqueue(StockPriceObj("Wall mart", "15 apr, 11.02 AM", 132.00));
+    myVar.enqueue(StockPriceObj("Wall mart", "15 apr, 11.03 AM", 135.00));
 
     std::cout << std::endl << "popping out the data from queue" << std::endl;
     std::cout << std::endl << "popped out data: "; (myVar.dequeue()).print();

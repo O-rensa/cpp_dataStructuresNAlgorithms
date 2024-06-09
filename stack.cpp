@@ -3,12 +3,12 @@
 #include <string>
 
 template <typename T>
-class myStack {
+class MyStack {
     private:
         std::vector<T> stackObj; 
     public:
         // constructor(s)
-        explicit myStack<T>() = default;
+        explicit MyStack<T>() = default;
 
         // method(s)
         void push(T value);
@@ -19,20 +19,16 @@ class myStack {
 
 // class method(s) definitions
 template<typename T>
-void myStack<T>::push(T value) {
-    using ms = myStack<T>;
-    
-    ms::stackObj.push_back(value);
+void MyStack<T>::push(T value) {
+    this->stackObj.push_back(value);
     std::cout << "pushed " << value << " to the stack." << std::endl;
 }
 
 template<typename T>
-T myStack<T>::pop() {
-    using ms = myStack<T>;
-    
-    if (ms::stackObj.size() > 0) {
-        T output = ms::stackObj.back();
-        ms::stackObj.pop_back();
+T MyStack<T>::pop() {
+    if (this->stackObj.size() > 0) {
+        T output = this->stackObj.back();
+        this->stackObj.pop_back();
 
         return output;
     }
@@ -42,15 +38,15 @@ T myStack<T>::pop() {
 }
 
 template<typename T>
-T myStack<T>::peek() {
-    T output = myStack<T>::stackObj.back();
+T MyStack<T>::peek() {
+    T output = this->stackObj.back();
 
     return output;
 }
 
 template<typename T>
-void myStack<T>::isEmpty() {
-    if (myStack<T>::stackObj.size() == 0) {
+void MyStack<T>::isEmpty() {
+    if (this->stackObj.size() == 0) {
         std::cout << "true"<< std::endl;
         return;
     } 
@@ -60,7 +56,7 @@ void myStack<T>::isEmpty() {
 
 int main() {
 
-    myStack<int> myVar = myStack<int>();
+    MyStack<int> myVar = MyStack<int>();
 
     std::cout << "inserting values to stack." << std::endl;
     myVar.push(10);
