@@ -5,9 +5,13 @@
 
 using namespace std;
 
-// helper function(s) declaration
+// helper function(s) prototype
 template<typename T>
-bool isContained(std::vector<T>& vec, T value);
+bool isContained(vector<T>& vec, T value);
+
+void showPaths(vector<vector<string>>& vectors);
+
+void showPath(vector<string> vector);
 
 // class(es)
 class Graph {
@@ -29,8 +33,8 @@ class Graph {
 
         // method(s) declaration
         bool isExist(string start);
-        vector<vector<string>> getPaths(string start, string end, vector<vector<string>> path);
-        vector<string>* getShortestPath(string start, string end, vector<string>* path);
+        vector<vector<string>> getPaths(string start, string end, vector<string> path);
+        vector<string> getShortestPath(string start, string end, vector<string> path);
 };
 
 // class method(s) definition
@@ -44,31 +48,23 @@ bool Graph::isExist(string start) {
     return false;
 }
 
-vector<vector<string>> Graph::getPaths(string start, string end, vector<vector<string>> path = {}) {
-    vector<string> visitedPaths;
+vector<vector<string>> Graph::getPaths(string start, string end, vector<string> path = {}) {
+    path.push_back(start);
 
-    for (vector<string> i : path) {
-        for (string j : i) {
-            visitedPaths.push_back(j);
-        }
-    }
-
-    visitedPaths.push_back(start);
+    vector<vector<string>> paths;
 
     if (start == end) {
-        path.push_back(vector<string>{start});
-        return path;
+        paths.push_back(path);
+        return paths;
     }
 
     if (!(this->isExist(start))) {
-        return {};
+        return paths;
     }
 
-    vector<vector<string>> paths;
     for (string node : this->graphMap[start]) {
         // cout << !(isContained(visitedPaths, node)) << endl;
-        if (!(isContained(visitedPaths, node))) {
-            path.push_back(vector<string>{start});
+        if (!(isContained(path, node))) {
             vector<vector<string>> newPaths = this->getPaths(node, end, path);
             for (vector<string> p : newPaths) {
                 paths.push_back(p);
@@ -76,33 +72,32 @@ vector<vector<string>> Graph::getPaths(string start, string end, vector<vector<s
         }
     }
 
-
     return paths;
 }
 
-vector<string>* Graph::getShortestPath(string start, string end, vector<string>* path = new vector<string>()) {
-    path->push_back(start);
+vector<string> Graph::getShortestPath(string start, string end, vector<string> path = {}) {
+    path.push_back(start);
 
     if (start == end) {
         return path;
     }
 
     if (!(this->isExist(start))) {
-        return nullptr;
+        return {};
     }
 
-    vector<string>* shortestPath = nullptr;
+    vector<string> shortestPath = {};
     for (string node : this->graphMap[start]) {
-        if (!(isContained(*path, start))) {
-            vector<string>* sp = this->getShortestPath(node, end, path);
-            if (sp != nullptr) {
-                if (shortestPath == nullptr || sp->size() < shortestPath->size()) {
+        if (!(isContained(path, node))) {
+            vector<string> sp = this->getShortestPath(node, end, path);
+            if (sp.size()) {
+                if (shortestPath.size() == 0 || sp.size() < shortestPath.size()) {
                     shortestPath = sp;
                 }
             }
         }
     }
-
+    
     return shortestPath;
 }
 
@@ -124,17 +119,14 @@ int main() {
 
     cout << "All paths between: " << start << " and " << end << endl;
     auto mnRoutes = routeGraph.getPaths(start, end);
-    for (int i = 0; i < mnRoutes.size(); i++) {
-        cout << "Route #" << i + 1 << endl;
-        for (string j : mnRoutes[i]) {
-            cout << j;
-            if (i == mnRoutes[i].size() -1) {
-                cout << endl;
-            } else {
-                cout << "->" << endl;
-            }
-        }
-    }
+
+    showPaths(mnRoutes);
+
+    cout << endl << "The shortest path between: " << start << " and " << end << endl;
+
+    vector<string> shortestPath = routeGraph.getShortestPath(start, end);
+
+    showPath(shortestPath);
 
     return 0;
 }
@@ -147,4 +139,31 @@ bool isContained(vector<T>& vec, T value) {
         }
     }
     return false;
-} 
+}
+
+__attribute__((always_inline)) inline
+void showPaths(vector<vector<string>>& vectors){
+    for (int i = 0; i < vectors.size(); i++) {
+        cout << endl << "Route #" << i + 1 << endl;
+        for (int j = 0; vectors[i].size() > j; j++) {
+            cout << vectors[i][j];
+            if (j == vectors[i].size() -1) {
+                cout << endl;
+            } else {
+                cout << " -> ";
+            }
+        }
+    }
+}
+
+__attribute__((always_inline)) inline
+void showPath(vector<string> vector){
+    for (int i = 0; vector.size() > i; i++) {
+        cout << vector[i];
+        if (i == vector.size() -1) {
+            cout << endl;
+        } else {
+            cout << " -> ";
+        }
+    }
+}
