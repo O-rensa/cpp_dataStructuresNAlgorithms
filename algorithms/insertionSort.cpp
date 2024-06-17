@@ -20,7 +20,7 @@ int main() {
     { 25, 22, 21, 10 },
     { 29, 15, 28 },
     {},
-    {6}
+    { 6 }
   };
 
   for (std::vector<int> t : test) {
@@ -54,7 +54,7 @@ void printVector(std::vector<int>& elems) {
     std::cout << "{ }" << std::endl;
     return;
   }
-  
+
   std::cout << "{ ";
   for (auto iter = elems.begin(); iter != elems.end(); iter++) {
     if (iter == elems.end() - 1) {
