@@ -16,8 +16,6 @@ int main() {
 
   std::vector<int> sortedMyVec = mergeSort(myVec);
 
-  std::cout << sortedMyVec.size() << std::endl;
-
   printVec(sortedMyVec);
 
   return 0;
@@ -37,13 +35,24 @@ std::vector<int> mergeSort(std::vector<int> input){
   std::vector<int> left;
   std::vector<int> right;
 
-  if (input.size() == 2) {
-    left = std::vector<int>(input[0]);
-    right = std::vector<int>(input[1]);
-  } else {
-    left = slicing(input, 0, mid);
-    right = slicing(input, mid, input.size() - 1);
+  if (input.size() == 1) {
+    return input;
   }
+
+  if (input.size() == 2) {
+    if (input[0] > input[1]) {
+      int temp;
+      temp = input[0];
+      input[0] = input[1];
+      input[1] = temp;
+      return input;
+    }
+
+    return input;
+  }
+    
+  left = slicing(input, 0, mid);
+  right = slicing(input, mid, input.size() - 1);
 
   left = mergeSort(left);
   right = mergeSort(right);
